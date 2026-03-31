@@ -153,10 +153,13 @@ A mobile-first web app for personal use (with clean architecture for future mult
 
 Combines all available signals into a final recommendation:
 
-- **"Recommended"** — Goodreads >= 4.0, OR Google Books >= 4.0, OR LLM says highly_acclaimed/classic with high confidence
-- **"Mixed Reviews"** — ratings between 3.0-4.0, OR LLM says mixed/well_received
-- **"Not Recommended"** — ratings below 3.0, OR LLM says poorly_received with high confidence
-- **"Not Enough Data"** — all sources failed or returned insufficient data
+Priority order (first matching rule wins):
+
+1. **"Not Enough Data"** — all sources failed or returned insufficient data
+2. **Conflicting signals** — if numerical ratings and LLM disagree significantly (e.g., Goodreads >= 4.0 but LLM says poorly_received), show both with note: "Mixed signals — check reviews"
+3. **"Recommended"** — Goodreads >= 4.0, OR Google Books >= 4.0, OR LLM says highly_acclaimed/classic with high confidence
+4. **"Mixed Reviews"** — ratings between 3.0-4.0, OR LLM says mixed/well_received
+5. **"Not Recommended"** — ratings below 3.0, OR LLM says poorly_received with high confidence
 
 The summary text explains which sources contributed and highlights notable awards or context from the LLM.
 
@@ -175,11 +178,14 @@ The summary text explains which sources contributed and highlights notable award
 
 ```
 For each physical edition:
+  if total_copies == 0: skip (withdrawn/unavailable)
   if copies_available > 0: wait_days = 0
   else: wait_days = (hold_queue_length / total_copies) * 14  # rough estimate
 
 Sort by wait_days ascending → pick first
 ```
+
+Note: The rating pipeline and library catalog search run in parallel — both are kicked off after OCR completes. The rating pipeline uses one Playwright instance for Goodreads; the library search uses a separate Playwright instance for BiblioCommons. This minimizes total wait time for the `/api/scan` response.
 
 ## UI Design
 
