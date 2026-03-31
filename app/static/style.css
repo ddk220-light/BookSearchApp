@@ -1,0 +1,300 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background: #0f0f1a;
+    color: #e0e0e0;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+}
+
+#app {
+    width: 100%;
+    max-width: 420px;
+    padding: 20px;
+}
+
+header {
+    text-align: center;
+    margin-bottom: 24px;
+}
+
+header h1 {
+    font-size: 24px;
+    font-weight: 700;
+}
+
+.tagline {
+    color: #888;
+    font-size: 13px;
+    margin-top: 4px;
+}
+
+.screen {
+    display: none;
+}
+
+.screen.active {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+}
+
+/* Capture */
+.capture-area {
+    width: 100%;
+    min-height: 250px;
+    border: 2px dashed #333;
+    border-radius: 16px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: border-color 0.2s;
+}
+
+.capture-area:active {
+    border-color: #6c5ce7;
+}
+
+.camera-icon {
+    font-size: 48px;
+    margin-bottom: 12px;
+}
+
+.capture-area p {
+    color: #888;
+    text-align: center;
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+/* Buttons */
+.btn-primary {
+    width: 100%;
+    padding: 14px;
+    background: #6c5ce7;
+    color: white;
+    border: none;
+    border-radius: 12px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.btn-primary:active {
+    background: #5a4bd1;
+}
+
+.btn-primary:disabled {
+    background: #444;
+    cursor: not-allowed;
+}
+
+.btn-secondary {
+    width: 100%;
+    padding: 12px;
+    background: transparent;
+    color: #6c5ce7;
+    border: 1px solid #6c5ce7;
+    border-radius: 12px;
+    font-size: 15px;
+    cursor: pointer;
+}
+
+.upload-link {
+    color: #666;
+    font-size: 13px;
+    cursor: pointer;
+}
+
+.link {
+    color: #6c5ce7;
+    font-size: 14px;
+    text-decoration: none;
+}
+
+/* Loading */
+.spinner {
+    width: 40px;
+    height: 40px;
+    border: 4px solid #333;
+    border-top: 4px solid #6c5ce7;
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+    margin: 40px 0 16px;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+#loading-text {
+    color: #888;
+    font-size: 14px;
+}
+
+/* Book info */
+.book-info {
+    display: flex;
+    gap: 14px;
+    width: 100%;
+    margin-bottom: 8px;
+}
+
+.book-cover {
+    width: 80px;
+    height: 110px;
+    background: #1e1e2e;
+    border-radius: 6px;
+    flex-shrink: 0;
+    overflow: hidden;
+}
+
+.book-cover img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.book-details h2 {
+    font-size: 17px;
+    font-weight: 600;
+    line-height: 1.3;
+}
+
+.book-details p {
+    color: #888;
+    font-size: 13px;
+    margin-top: 2px;
+}
+
+#rating-badges {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 8px;
+}
+
+.badge {
+    font-size: 12px;
+    padding: 3px 10px;
+    border-radius: 12px;
+    font-weight: 500;
+}
+
+.badge-goodreads {
+    background: #2d5a2d;
+    color: #7ddf7d;
+}
+
+.badge-google {
+    background: #2d3a5a;
+    color: #7db5df;
+}
+
+.badge-llm {
+    background: #4a3a5a;
+    color: #c09ddf;
+}
+
+/* Recommendation card */
+.recommendation-card {
+    width: 100%;
+    border-radius: 12px;
+    padding: 14px;
+    margin-bottom: 4px;
+}
+
+.recommendation-card.recommended {
+    background: #1e3a1e;
+    border: 1px solid #2d5a2d;
+}
+
+.recommendation-card.mixed {
+    background: #3a3a1e;
+    border: 1px solid #5a5a2d;
+}
+
+.recommendation-card.not-recommended {
+    background: #3a1e1e;
+    border: 1px solid #5a2d2d;
+}
+
+.recommendation-card.no-data {
+    background: #1e1e2e;
+    border: 1px solid #333;
+}
+
+.recommendation-card .verdict {
+    font-weight: 600;
+    font-size: 14px;
+    margin-bottom: 4px;
+}
+
+.recommendation-card .summary {
+    color: #aaa;
+    font-size: 13px;
+    line-height: 1.4;
+}
+
+/* Library section */
+.library-section {
+    width: 100%;
+    background: #1e1e2e;
+    border-radius: 12px;
+    padding: 14px;
+}
+
+.library-section h3 {
+    font-size: 14px;
+    font-weight: 600;
+    margin-bottom: 6px;
+}
+
+.library-section p {
+    color: #888;
+    font-size: 13px;
+    line-height: 1.5;
+}
+
+/* Confirmation */
+.confirm-icon {
+    font-size: 56px;
+    margin: 20px 0 12px;
+}
+
+#confirm-screen h2 {
+    color: #7ddf7d;
+    font-size: 22px;
+    margin-bottom: 12px;
+}
+
+#confirm-details {
+    color: #aaa;
+    font-size: 14px;
+    text-align: center;
+    margin-bottom: 20px;
+    line-height: 1.6;
+}
+
+/* Error */
+.error-icon {
+    font-size: 48px;
+    margin: 20px 0 12px;
+}
+
+#error-text {
+    color: #aaa;
+    text-align: center;
+    font-size: 14px;
+    margin-bottom: 16px;
+    line-height: 1.5;
+}

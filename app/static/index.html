@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>BookSnap</title>
+    <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+    <div id="app">
+        <header>
+            <h1>BookSnap</h1>
+            <p class="tagline">Snap a cover. Get a recommendation.</p>
+        </header>
+
+        <!-- State 1: Capture -->
+        <div id="capture-screen" class="screen active">
+            <div class="capture-area" onclick="document.getElementById('camera-input').click()">
+                <div class="camera-icon">&#128247;</div>
+                <p>Tap to take a photo<br>of a book cover</p>
+            </div>
+            <input type="file" id="camera-input" accept="image/*" capture="environment" hidden>
+            <button class="btn-primary" onclick="document.getElementById('camera-input').click()">
+                Take Photo
+            </button>
+            <label class="upload-link">
+                or upload an image
+                <input type="file" id="upload-input" accept="image/*" hidden>
+            </label>
+        </div>
+
+        <!-- Loading -->
+        <div id="loading-screen" class="screen">
+            <div class="spinner"></div>
+            <p id="loading-text">Reading cover...</p>
+        </div>
+
+        <!-- State 2: Results -->
+        <div id="results-screen" class="screen">
+            <div class="book-info">
+                <div class="book-cover" id="book-cover"></div>
+                <div class="book-details">
+                    <h2 id="book-title"></h2>
+                    <p id="book-author"></p>
+                    <div id="rating-badges"></div>
+                </div>
+            </div>
+            <div id="recommendation-card" class="recommendation-card"></div>
+            <div id="library-section" class="library-section"></div>
+            <button id="hold-btn" class="btn-primary" style="display:none">
+                Place Hold
+            </button>
+            <button class="btn-secondary" onclick="resetApp()">Scan Another Book</button>
+        </div>
+
+        <!-- State 3: Confirmation -->
+        <div id="confirm-screen" class="screen">
+            <div class="confirm-icon">&#9989;</div>
+            <h2>Hold Placed!</h2>
+            <div id="confirm-details"></div>
+            <button class="btn-primary" onclick="resetApp()">Scan Another Book</button>
+            <a id="library-link" class="link" href="#" target="_blank">View on Library Site</a>
+        </div>
+
+        <!-- Error -->
+        <div id="error-screen" class="screen">
+            <div class="error-icon">&#9888;</div>
+            <p id="error-text"></p>
+            <button class="btn-primary" onclick="resetApp()">Try Again</button>
+        </div>
+    </div>
+    <script src="/app.js"></script>
+</body>
+</html>
