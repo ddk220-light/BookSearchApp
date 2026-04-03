@@ -2,7 +2,7 @@ import asyncio
 import os
 import tempfile
 
-from fastapi import FastAPI, UploadFile, File, HTTPException
+from fastapi import FastAPI, UploadFile, File, HTTPException, Query
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 
@@ -19,6 +19,19 @@ app = FastAPI(title="BookSnap")
 class HoldRequest(BaseModel):
     edition_id: str
     title: str
+
+
+@app.get("/api/goodreads")
+async def goodreads_rating(
+    title: str = Query(..., description="Book title"),
+    author: str = Query("", description="Book author (optional)"),
+):
+    """Fetch Goodreads rating for a book by title and optional author.
+    Returns JSON with rating, count, and url, or an error message."""
+    result = await scrape_goodreads_rating(title, author)
+    if result is None:
+        return {"error": "Could not fetch Goodreads rating", "rating": None, "count": None, "url": None}
+    return result
 
 
 @app.post("/api/scan")
