@@ -54,12 +54,52 @@ async def scrape_goodreads_rating(
             count = _parse_count(count_text)
             book_url = page.url
 
+            cover_image = await page.evaluate("""
+                () => {
+                    const el = document.querySelector(
+                        '.BookCover__image img, .ResponsiveImage, #coverImage'
+                    );
+                    return el ? (el.src || el.getAttribute('src')) : null;
+                }
+            """)
+
+            reviews = await page.evaluate("""
+                () => {
+                    const nodes = document.querySelectorAll(
+                        'article.ReviewCard, [itemprop="reviews"] .friendReviews .review'
+                    );
+                    const out = [];
+                    nodes.forEach((node) => {
+                        if (out.length >= 5) return;
+                        const author = node.querySelector(
+                            '.ReviewerProfile__name a, .user a'
+                        );
+                        const ratingEl = node.querySelector(
+                            '.ShelfStatus .RatingStars, .RatingStars, .staticStars'
+                        );
+                        const textEl = node.querySelector(
+                            'section.ReviewText span.Formatted, .reviewText span'
+                        );
+                        const text = textEl ? textEl.textContent.trim() : '';
+                        if (!text) return;
+                        out.push({
+                            author: author ? author.textContent.trim() : 'Goodreads reader',
+                            rating: ratingEl ? (ratingEl.getAttribute('aria-label') || ratingEl.textContent.trim()) : null,
+                            text: text.length > 600 ? text.slice(0, 600).trimEnd() + '...' : text,
+                        });
+                    });
+                    return out;
+                }
+            """)
+
             await browser.close()
 
             return {
                 "rating": rating,
                 "count": count,
                 "url": book_url,
+                "cover_image": cover_image,
+                "reviews": reviews or [],
             }
     except Exception:
         return None

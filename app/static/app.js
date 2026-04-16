@@ -64,6 +64,9 @@ function displayResults(data) {
     document.getElementById('book-title').textContent = data.title;
     document.getElementById('book-author').textContent = data.author;
 
+    // Closed book: cover image + Goodreads rating side
+    setupClosedBook(data);
+
     // Rating badges
     const badges = document.getElementById('rating-badges');
     badges.innerHTML = '';
@@ -119,6 +122,102 @@ function displayResults(data) {
     }
 
     showScreen('results-screen');
+}
+
+function setupClosedBook(data) {
+    const goodreads = data.ratings.goodreads;
+    const ratingSide = document.getElementById('goodreads-side');
+    const book = document.getElementById('book-3d');
+    const cover = document.getElementById('book-cover-front');
+    const reviewsSection = document.getElementById('reviews-section');
+
+    // Reset open state for repeat scans
+    book.classList.remove('open');
+    reviewsSection.classList.remove('visible');
+
+    // Goodreads rating on the left of the closed book
+    if (goodreads && goodreads.rating != null) {
+        const stars = renderStars(goodreads.rating);
+        const count = goodreads.count ? formatCount(goodreads.count) + ' ratings' : '';
+        ratingSide.classList.remove('empty');
+        ratingSide.innerHTML =
+            '<div class="gr-label">Goodreads</div>' +
+            '<div class="gr-rating">' + goodreads.rating.toFixed(2) + '</div>' +
+            '<div class="gr-stars">' + stars + '</div>' +
+            (count ? '<div class="gr-count">' + count + '</div>' : '');
+    } else {
+        ratingSide.classList.add('empty');
+        ratingSide.innerHTML = '';
+    }
+
+    // Cover image on the closed book
+    const coverUrl = goodreads && goodreads.cover_image;
+    const hint = '<div class="cover-hint">Tap to open</div>';
+    if (coverUrl) {
+        cover.innerHTML = '<img src="' + coverUrl + '" alt="Book cover">' + hint;
+    } else {
+        cover.innerHTML =
+            '<div style="display:flex;align-items:center;justify-content:center;' +
+            'width:100%;height:100%;padding:10px;text-align:center;font-size:13px;' +
+            'color:#aaa;">' + escapeHtml(data.title) + '</div>' + hint;
+    }
+
+    // Pre-render reviews so they're ready when the book opens
+    renderReviews(goodreads ? goodreads.reviews : []);
+
+    // Click to open the book
+    book.onclick = function () {
+        if (book.classList.contains('open')) return;
+        book.classList.add('open');
+        // Reveal reviews after the cover finishes rotating
+        setTimeout(function () {
+            reviewsSection.classList.add('visible');
+        }, 700);
+    };
+}
+
+function renderReviews(reviews) {
+    const section = document.getElementById('reviews-section');
+    if (!reviews || reviews.length === 0) {
+        section.innerHTML =
+            '<h3>Goodreads Reviews</h3>' +
+            '<p class="reviews-empty">No reviews available.</p>';
+        return;
+    }
+    let html = '<h3>Goodreads Reviews</h3>';
+    reviews.forEach(function (r) {
+        html +=
+            '<div class="review-card">' +
+                '<div class="review-meta">' +
+                    '<span class="review-author">' + escapeHtml(r.author || 'Goodreads reader') + '</span>' +
+                    (r.rating ? '<span class="review-rating">' + escapeHtml(r.rating) + '</span>' : '') +
+                '</div>' +
+                '<div class="review-text">' + escapeHtml(r.text) + '</div>' +
+            '</div>';
+    });
+    section.innerHTML = html;
+}
+
+function renderStars(rating) {
+    const full = Math.floor(rating);
+    const half = rating - full >= 0.5 ? 1 : 0;
+    const empty = 5 - full - half;
+    return '\u2605'.repeat(full) + (half ? '\u00BD' : '') + '\u2606'.repeat(empty);
+}
+
+function formatCount(n) {
+    if (n >= 1000000) return (n / 1000000).toFixed(1).replace(/\.0$/, '') + 'M';
+    if (n >= 1000) return (n / 1000).toFixed(1).replace(/\.0$/, '') + 'K';
+    return String(n);
+}
+
+function escapeHtml(s) {
+    return String(s == null ? '' : s)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
 }
 
 async function placeHold(editionId, title) {

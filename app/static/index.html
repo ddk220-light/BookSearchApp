@@ -37,14 +37,21 @@
 
         <!-- State 2: Results -->
         <div id="results-screen" class="screen">
-            <div class="book-info">
-                <div class="book-cover" id="book-cover"></div>
-                <div class="book-details">
-                    <h2 id="book-title"></h2>
-                    <p id="book-author"></p>
-                    <div id="rating-badges"></div>
+            <div class="book-stage">
+                <div class="rating-side" id="goodreads-side"></div>
+                <div class="book-3d" id="book-3d">
+                    <div class="book-pages"></div>
+                    <div class="book-cover-front" id="book-cover-front">
+                        <div class="cover-hint">Tap to open</div>
+                    </div>
                 </div>
             </div>
+            <div class="book-details">
+                <h2 id="book-title"></h2>
+                <p id="book-author"></p>
+                <div id="rating-badges"></div>
+            </div>
+            <div id="reviews-section" class="reviews-section"></div>
             <div id="recommendation-card" class="recommendation-card"></div>
             <div id="library-section" class="library-section"></div>
             <button id="hold-btn" class="btn-primary" style="display:none">
